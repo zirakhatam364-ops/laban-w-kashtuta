@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لبن و قشطوطة اربيل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- SOFT BLUE THEME --- */
+        :root {
+            --primary: #2b5d8a; /* Deep Soft Blue */
+            --secondary: #4a90e2; /* Bright Soft Blue */
+            --bg-color: #f0f4f8; /* Very Light Blue-Grey */
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-light: #ffffff;
+            --accent-soft: #e3f2fd;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --shadow: 0 10px 30px rgba(43, 93, 138, 0.1);
+            --shadow-hover: 0 15px 40px rgba(43, 93, 138, 0.2);
+            --overlay: rgba(43, 62, 80, 0.8);
+        }
+
+        /* Dark Mode Blue Theme */
+        body.dark-mode {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #e2e8f0;
+            --primary: #60a5fa;
+            --accent-soft: #334155;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            transition: all 0.4s ease;
+            min-height: 100vh;
+        }
+
+        body.rtl { direction: rtl; text-align: right; font-family: 'Amiri', 'Poppins', sans-serif; }
+
+        /* Decorative Background Pattern */
+        body::before {
+            content: '';
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(var(--accent-soft) 1px, transparent 1px);
+            background-size: 20px 20px; opacity: 0.5; z-index: -1;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 10px 5%;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 2px solid var(--secondary);
+            height: 70px; /* Fixed height for nav */
+        }
+
+        .logo {
+            display: flex; align-items: center; gap: 10px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        /* Custom Logo Styling */
+        .logo-img {
+            height: 45px; /* Adjust logo size */
+            width: auto;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem; font-weight: 700;
+            display: none; /* Hidden on mobile by default */
+        }
+        /* Show text on larger screens */
+        @media (min-width: 500px) { .logo-text { display: block; } }
+
+        .nav-actions { display: flex; gap: 8px; align-items: center; }
+
+        .nav-btn {
+            background: transparent; color: var(--primary);
+            border: 2px solid transparent;
+            padding: 8px 12px; border-radius: 30px;
+            cursor: pointer; font-weight: 600; transition: all 0.3s;
+            font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
+        }
+        .nav-btn:hover { background: var(--primary); color: white; }
+        .nav-btn.active { background: var(--secondary); color: white; }
+        
+        /* Hide admin buttons completely by default */
+        .admin-only { display: none !important; }
+
+        /* Hero Section */
+        .hero {
+            height: 40vh; min-height: 300px; max-height: 400px;
+            display: flex; justify-content: center; align-items: center;
+            text-align: center; position: relative;
+            background: linear-gradient(rgba(43, 93, 138, 0.6), rgba(43, 93, 138, 0.8)), url('https://images.unsplash.com/photo-1517433670267-08bbd4be890f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80');
+            background-size: cover; background-position: center;
+            color: white; margin-bottom: 30px;
+        }
+
+        .hero-text h1 {
+            font-family: 'Playfair Display', serif; font-size: 2.8rem;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            animation: fadeInUp 1s ease-out; margin-bottom: 10px;
+        }
+        .hero-text p { font-size: 1.1rem; opacity: 0.9; letter-spacing: 1px; }
+
+        /* Container */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px 60px; }
+
+        /* Search */
+        .search-container { margin-bottom: 20px; position: relative; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .search-input {
+            width: 100%; padding: 15px 20px; padding-left: 45px;
+            border-radius: 50px; border: none;
+            background: var(--card-bg); color: var(--text-main);
+            box-shadow: var(--shadow); font-size: 1rem;
+            transition: transform 0.3s;
+        }
+        .search-input:focus { outline: none; transform: scale(1.01); box-shadow: var(--shadow-hover); border: 1px solid var(--secondary); }
+        .search-icon { position: absolute; top: 50%; left: 15px; transform: translateY(-50%); color: var(--secondary); font-size: 1.1rem; }
+        body.rtl .search-icon { left: auto; right: 15px; }
+        body.rtl .search-input { padding-left: 20px; padding-right: 45px; }
+
+        /* Categories */
+        .category-nav {
+            display: flex; overflow-x: auto; gap: 10px; padding: 10px 0;
+            margin-bottom: 30px; scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; scrollbar-width: none;
+        }
+        .category-nav::-webkit-scrollbar { display: none; }
+        
+        .cat-pill {
+            padding: 8px 20px; background: var(--card-bg);
+            border: 2px solid var(--secondary); color: var(--secondary);
+            border-radius: 30px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; white-space: nowrap; scroll-snap-align: start;
+            font-size: 0.9rem;
+        }
+        .cat-pill:hover, .cat-pill.active { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-2px); }
+
+        /* Grid */
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        @media (max-width: 600px) { .menu-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; } }
+
+        /* Card Styling */
+        .card {
+            background: var(--card-bg); border-radius: 15px;
+            overflow: hidden; position: relative;
+            box-shadow: var(--shadow); transition: all 0.4s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            opacity: 0; animation: fadeInUp 0.6s ease-out forwards;
+            display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        
+        .card-img-container { height: 180px; overflow: hidden; position: relative; }
+        @media (max-width: 600px) { .card-img-container { height: 140px; } }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .card:hover .card-img { transform: scale(1.05); }
+
+        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        
+        .card-badge {
+            position: absolute; top: 10px; right: 10px;
+            background: var(--secondary); color: white;
+            padding: 4px 10px; border-radius: 15px; font-size: 0.7rem; font-weight: bold;
+            z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        body.rtl .card-badge { right: auto; left: 10px; }
+
+        .card-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--primary); margin-bottom: 5px; }
+        @media (max-width: 600px) { .card-title { font-size: 1rem; } }
+        
+        .card-desc { font-size: 0.8rem; color: #666; margin-bottom: 10px; line-height: 1.4; flex-grow: 1; display: none; }
+        @media (min-width: 600px) { .card-desc { display: block; } }
+        
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; border-top: 1px solid #eee; padding-top: 10px; }
+        .card-price { font-weight: 700; font-size: 1rem; color: var(--primary); }
+
+        /* Admin Controls on Card */
+        .admin-controls {
+            position: absolute; top: 10px; left: 10px; right: auto;
+            display: flex; gap: 5px; z-index: 10;
+            opacity: 0; visibility: hidden; transition: all 0.3s;
+        }
+        body.rtl .admin-controls { left: auto; right: 10px; flex-direction: row-reverse; }
+        
+        .card.show-admin .admin-controls { opacity: 1; visibility: visible; }
+        
+        .admin-btn {
+            width: 30px; height: 30px; border-radius: 50%; border: none;
+            cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;
+            color: white; backdrop-filter: blur(5px); transition: transform 0.2s;
+        }
+        .admin-btn:hover { transform: scale(1.1); }
+        .edit-btn { background: rgba(74, 144, 226, 0.9); }
+        .delete-btn { background: rgba(231, 76, 60, 0.9); }
+        .stock-btn { background: rgba(39, 174, 96, 0.9); }
+        .stock-btn.inactive { background: rgba(189, 195, 199, 0.9); }
+
+        /* Sold Out Overlay */
+        .sold-out-badge {
+            position: absolute; top: 10px; left: 10px;
+            background: #e74c3c; color: white;
+            padding: 5px 12px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: bold;
+            z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: none;
+        }
+        .card.sold-out .sold-out-badge { display: block; }
+        .card.sold-out .card-img { filter: grayscale(100%); }
+        body.rtl .sold-out-badge { left: auto; right: 10px; }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--overlay); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+            padding: 15px; /* Mobile padding */
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--card-bg); padding: 25px;
+            border-radius: 20px; width: 100%; max-width: 450px;
+            position: relative; transform: scale(0.9); transition: transform 0.3s; max-height: 90vh; overflow-y: auto;
+        }
+        .modal-overlay.active .modal { transform: scale(1); }
+        
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; color: #888; }
+        body.rtl .close-modal { right: auto; left: 15px; }
+
+        .form-group { margin-bottom: 15px; text-align: left; }
+        body.rtl .form-group { text-align: right; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 10px; border: 2px solid var(--accent-soft); border-radius: 8px;
+            background: var(--bg-color); color: var(--text-main); font-size: 1rem;
+        }
+        .form-group input:focus { border-color: var(--secondary); outline: none; }
+
+        .submit-btn {
+            width: 100%; padding: 12px; background: var(--primary); color: white;
+            border: none; border-radius: 50px; font-size: 1rem; cursor: pointer;
+            font-weight: bold; transition: all 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .submit-btn:hover { background: var(--secondary); transform: translateY(-2px); }
+
+        /* Toast */
+        #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; width: 90%; max-width: 400px; text-align: center; }
+        .toast { padding: 12px 25px; border-radius: 50px; color: white; font-weight: 500; box-shadow: 0 5px 15px rgba(0,0,0,0.3); margin-top: 10px; animation: fadeInUp 0.5s ease-out; display: inline-flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+
+        /* Animations */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Floating Buttons */
+        .floating-btn {
+            position: fixed; bottom: 20px;
+            width: 50px; height: 50px;
+            background: var(--primary); color: white;
+            border: none; border-radius: 50%;
+            font-size: 20px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none; align-items: center; justify-content: center;
+            z-index: 90; transition: transform 0.3s;
+        }
+        .floating-btn:hover { transform: scale(1.1); }
+        
+        #scrollTopBtn { right: 20px; bottom: 20px; }
+        #qrTriggerBtn { right: 80px; bottom: 20px; background: var(--secondary); }
+        #settingsBtn { right: 140px; bottom: 20px; background: #34495e; }
+        
+        body.rtl #scrollTopBtn { right: auto; left: 20px; }
+        body.rtl #qrTriggerBtn { right: auto; left: 80px; }
+        body.rtl #settingsBtn { right: auto; left: 140px; }
+
+        /* Mobile Adjustments for Floating Buttons */
+        @media (max-width: 768px) {
+            .floating-btn { width: 45px; height: 45px; font-size: 18px; bottom: 15px; }
+            #scrollTopBtn { right: 15px; }
+            #qrTriggerBtn { right: 65px; }
+            #settingsBtn { right: 115px; }
+            body.rtl #scrollTopBtn { left: 15px; right: auto; }
+            body.rtl #qrTriggerBtn { left: 65px; right: auto; }
+            body.rtl #settingsBtn { left: 115px; right: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <!-- Logo with Image -->
+        <a href="#" class="logo">
+            <img src="https://z-cdn-media.chatglm.cn/files/7971ad61-7e65-4320-ae97-eb880e6d39fa.png?auth_key=1871230864-4e9161964ecb4fd0b5856a2bb96ee40a-0-6aa68558586de1367a77d05c20f15509" alt="Logo" class="logo-img">
+            <span class="logo-text">Laban w kashtuta</span>
+        </a>
+        
+        <div class="nav-actions">
+            <button class="nav-btn" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
+            <button class="nav-btn" onclick="setLanguage('en')">EN</button>
+            <button class="nav-btn" onclick="setLanguage('ar')">عر</button>
+            
+            <!-- Manager ONLY Buttons -->
+            <button id="settingsBtn" class="nav-btn admin-only" onclick="openSettingsModal()"><i class="fas fa-cog"></i> <span>Settings</span></button>
+            <button id="manageCatBtn" class="nav-btn admin-only" onclick="openCategoryModal()"><i class="fas fa-folder-plus"></i> <span>Categories</span></button>
+            <button id="addBtn" class="nav-btn admin-only" onclick="openModal()"><i class="fas fa-plus"></i> <span>Add</span></button>
+            
+            <!-- Login/Logout Button -->
+            <button id="authBtn" class="nav-btn" onclick="toggleLogin()"><i class="fas fa-user-shield"></i> <span>Manager</span></button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1 data-translate="hero_title">Laban w kashtuta</h1>
+            <p data-translate="hero_subtitle">Freshly baked with love.</p>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchInput" onkeyup="searchMenu()" placeholder="Search...">
+        </div>
+
+        <div id="categoryNav" class="category-nav"></div>
+        <div id="menuContainer"></div>
+    </div>
+
+    <!-- FLOATING BUTTONS -->
+    <button class="floating-btn" id="scrollTopBtn" onclick="scrollToTop()"><i class="fas fa-chevron-up"></i></button>
+    <button class="floating-btn" id="qrTriggerBtn" onclick="generateQR()" title="Menu QR"><i class="fas fa-qrcode"></i></button>
+    <button class="floating-btn" id="settingsBtnFloating" onclick="openSettingsModal()" title="Settings"><i class="fas fa-cog"></i></button>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"></div>
+
+    <!-- ITEM MODAL -->
+    <div id="modalOverlay" class="modal-overlay" onclick="closeModalOutside(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle" style="text-align:center; margin-bottom:20px; font-family:'Playfair Display'; color:var(--primary);" data-translate="add_new">Add New Sweet</h2>
+            <form id="itemForm" onsubmit="saveItem(event)">
+                <input type="hidden" id="itemId">
+                
+                <div class="form-group">
+                    <label data-translate="name">Item Name</label>
+                    <input type="text" id="itemName" required placeholder="e.g. Chocolate Cake">
+                </div>
+
+                <div class="form-group">
+                    <label data-translate="category">Category</label>
+                    <select id="itemCategory" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label data-translate="image">Image</label>
+                    <input type="file" id="itemImageFile" accept="image/*" onchange="previewImage(this)">
+                    <input type="hidden" id="itemImageHidden">
+                    <img id="imagePreview" src="" style="display:none; width:80px; height:80px; object-fit:cover; margin-top:10px; border-radius:10px;">
+                </div>
+
+                <div class="form-group">
+                    <label data-translate="price">Price (IQD)</label>
+                    <input type="number" id="itemPrice" step="1" required placeholder="e.g. 5000">
+                </div>
+
+                <div class="form-group">
+                    <label data-translate="description">Description</label>
+                    <textarea id="itemDesc" rows="3" placeholder="Delicious and moist..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" data-translate="save">Save Item</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CATEGORY MODAL -->
+    <div id="catModalOverlay" class="modal-overlay" onclick="closeCategoryModalOutside(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeCategoryModal()">&times;</span>
+            <h2 style="text-align:center; margin-bottom:20px; font-family:'Playfair Display'; color:var(--primary);" data-translate="manage_cats">Manage Categories</h2>
+            
+            <div class="form-group" style="display:flex; gap:10px;">
+                <input type="text" id="newCatName" placeholder="New Category Name" style="flex:1; border:2px solid var(--accent-soft); border-radius:8px; padding:8px;">
+                <button class="submit-btn" style="width:auto; padding:8px 15px; font-size:0.9rem;" onclick="addCategory()" data-translate="add">Add</button>
+            </div>
+            <div id="categoryList" class="cat-list"></div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settingsModalOverlay" class="modal-overlay" onclick="closeSettingsModalOutside(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeSettingsModal()">&times;</span>
+            <h2 style="text-align:center; margin-bottom:20px; font-family:'Playfair Display'; color:var(--primary);" data-translate="settings">Settings & Backup</h2>
+            
+            <div style="display: grid; gap: 15px; margin-top: 20px;">
+                <button class="submit-btn" onclick="exportToExcel()" style="background-color: #28a745;">
+                    <i class="fas fa-file-excel"></i> <span data-translate="export_excel">Export to Excel</span>
+                </button>
+
+                <button class="submit-btn" onclick="exportData()" style="background-color: #17a2b8;">
+                    <i class="fas fa-download"></i> <span data-translate="export_backup">Backup (JSON)</span>
+                </button>
+                
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label data-translate="import" style="text-align: center; width: 100%;">Import Backup (JSON)</label>
+                    <input type="file" id="importFile" accept=".json" onchange="importData(this)" style="border: 2px dashed #ccc; padding: 15px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR CODE MODAL -->
+    <div id="qrModalOverlay" class="modal-overlay" onclick="closeQRModalOutside(event)">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width: 300px; text-align:center;">
+            <span class="close-modal" onclick="closeQRModal()">&times;</span>
+            <h2 style="margin-bottom:15px; font-family:'Playfair Display'; color:var(--primary);" data-translate="scan_menu">Scan Menu</h2>
+            <img id="qrCodeImage" src="" alt="QR Code" style="width:100%; border-radius:10px;">
+            <p style="color: #666; font-size: 0.9rem; margin: 10px 0;" data-translate="scan_desc">Scan to open menu.</p>
+            <button id="downloadQrBtn" class="submit-btn download-btn" style="display:none;" onclick="downloadQR()">
+                <i class="fas fa-download"></i> <span>Download</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- SETTINGS & STATE ---
+        const MANAGER_PASSWORD = "1234"; // Change this password!
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+        let currentLang = 'en';
+        let isManagerLoggedIn = false;
+        let editingId = null;
+
+        // Data
+        let categories = JSON.parse(localStorage.getItem('confectioneryCategories')) || ["Cakes", "Pastries", "Cookies", "Drinks"];
+        let menuItems = JSON.parse(localStorage.getItem('confectioneryMenu')) || [
+            { id: 1, name: "Blue Velvet Cake", category: "Cakes", img: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=500", price: 5000, desc: "Soft blue velvet layers with creamy cheese frosting.", available: true },
+            { id: 2, name: "Strawberry Macarons", category: "Pastries", img: "https://images.unsplash.com/photo-1569864358642-9d1684040f43?w=500", price: 2000, desc: "Crispy shell, chewy center.", available: true }
+        ];
+
+        const translations = {
+            en: { hero_title: "Laban w kashtuta Sweets", hero_subtitle: "Freshly baked with love.", our_menu: "Our Menu", add_new: "Add New Sweet", login: "Manager", logout: "Logout", manage_cats: "Categories", name: "Item Name", category: "Category", image: "Image", price: "Price (IQD)", description: "Description", save: "Save Item", edit: "Edit", delete: "Delete", confirm_delete: "Are you sure?", login_success: "Welcome Back!", wrong_pass: "Wrong Password", select_category: "Select Category", scan_menu: "Scan Menu", scan_desc: "Scan to open menu.", download_qr: "Download QR", settings: "Settings & Backup", export_excel: "Export to Excel", export_backup: "Backup Data (JSON)", import: "Import Data (JSON)", sold_out: "Sold Out", search_placeholder: "Search menu..." },
+            ar: { hero_title: "حلويات لبن و قشطوطة", hero_subtitle: "مخبوزة طازجة بحب", our_menu: "قائمتنا", add_new: "اضافة صنف", login: "مدير", logout: "خروج", manage_cats: "الاقسام", name: "اسم الصنف", category: "القسم", image: "الصورة", price: "السعر (د.ع)", description: "الوصف", save: "حفظ", edit: "تعديل", delete: "حذف", confirm_delete: "هل انت متأكد؟", login_success: "أهلاً بعودتك!", wrong_pass: "كلمة المرور خاطئة", select_category: "اختر القسم", scan_menu: "مسح القائمة", scan_desc: "امسح لفتح القائمة.", download_qr: "تحميل الكود", settings: "الإعدادات والنسخ", export_excel: "تصدير إلى إكسل", export_backup: "نسخ احتياطي (JSON)", import: "استيراد البيانات (JSON)", sold_out: "نفذ", search_placeholder: "ابحث في القائمة..." }
+        };
+
+        // --- INIT ---
+        function init() {
+            setLanguage('en');
+            if(isDarkMode) document.body.classList.add('dark-mode');
+            updateUIForRole(); // Check login state on load
+        }
+
+        // --- SYSTEM FUNCTIONS ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            let icon = 'info-circle';
+            if(type === 'success') icon = 'check-circle';
+            if(type === 'error') icon = 'exclamation-circle';
+            toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.body.classList.remove('rtl');
+            if (lang === 'ar') document.body.classList.add('rtl');
+            
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (translations[lang][key]) el.innerText = translations[lang][key];
+            });
+
+            document.getElementById('searchInput').placeholder = translations[lang].search_placeholder;
+            renderMenu();
+            renderCategoryList();
+        }
+
+        // --- PERMISSIONS & LOGIN ---
+        function toggleLogin() {
+            if (isManagerLoggedIn) {
+                isManagerLoggedIn = false;
+                showToast("Logged Out", 'info');
+            } else {
+                let input = prompt("Enter Manager Password:");
+                if (input === MANAGER_PASSWORD) {
+                    isManagerLoggedIn = true;
+                    showToast(translations[currentLang].login_success, 'success');
+                } else if (input !== null) {
+                    showToast(translations[currentLang].wrong_pass, 'error');
+                    return;
+                }
+            }
+            updateUIForRole();
+            renderMenu();
+        }
+
+        function updateUIForRole() {
+            const adminBtns = document.querySelectorAll('.admin-only');
+            const authBtn = document.getElementById('authBtn');
+            const downloadQrBtn = document.getElementById('downloadQrBtn');
+            const settingsFloat = document.getElementById('settingsBtnFloating');
+
+            if (isManagerLoggedIn) {
+                adminBtns.forEach(btn => btn.style.display = 'flex');
+                authBtn.classList.add('active');
+                authBtn.innerHTML = `<i class="fas fa-sign-out-alt"></i> <span>${translations[currentLang].logout}</span>`;
+                if(downloadQrBtn) downloadQrBtn.style.display = 'inline-flex';
+                if(settingsFloat) settingsFloat.style.display = 'flex';
+            } else {
+                adminBtns.forEach(btn => btn.style.display = 'none');
+                authBtn.classList.remove('active');
+                authBtn.innerHTML = `<i class="fas fa-user-lock"></i> <span>${translations[currentLang].login}</span>`;
+                if(downloadQrBtn) downloadQrBtn.style.display = 'none';
+                if(settingsFloat) settingsFloat.style.display = 'none';
+            }
+        }
+
+        // --- SEARCH ---
+        function searchMenu() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').innerText.toLowerCase();
+                const desc = card.querySelector('.card-desc')?.innerText.toLowerCase() || "";
+                if (title.includes(input) || desc.includes(input)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // --- DATA MANAGEMENT ---
+        function exportToExcel() {
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+            csvContent += "Name,Category,Price (IQD),Description,Image URL,Available\n";
+            menuItems.forEach(item => {
+                const name = `"${item.name.replace(/"/g, '""')}"`;
+                const category = `"${item.category.replace(/"/g, '""')}"`;
+                const price = item.price;
+                const desc = `"${item.desc.replace(/"/g, '""')}"`;
+                const img = `"${item.img}"`;
+                const available = item.available ? "Yes" : "No";
+                csvContent += `${name},${category},${price},${desc},${img},${available}\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "menu_export.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Excel File Exported!", 'success');
+        }
+
+        function openSettingsModal() { if(isManagerLoggedIn) document.getElementById('settingsModalOverlay').classList.add('active'); }
+        function closeSettingsModal() { document.getElementById('settingsModalOverlay').classList.remove('active'); }
+        function closeSettingsModalOutside(e) { if(e.target.id === 'settingsModalOverlay') closeSettingsModal(); }
+
+        function exportData() {
+            const data = { categories: categories, items: menuItems };
+            const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'menu_backup.json';
+            a.click();
+            showToast("Backup Downloaded!", 'success');
+        }
+
+        function importData(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if(data.categories && data.items) {
+                            categories = data.categories;
+                            menuItems = data.items;
+                            saveCategories();
+                            saveData();
+                            renderMenu();
+                            renderCategoryList();
+                            showToast("Data Imported Successfully!", 'success');
+                        } else {
+                            showToast("Invalid File Format", 'error');
+                        }
+                    } catch(err) {
+                        showToast("Error Reading File", 'error');
+                    }
+                };
+                reader.readAsText(input.files[0]);
+            }
+        }
+
+        // --- CATEGORY FUNCTIONS ---
+        function openCategoryModal() { if(isManagerLoggedIn){ renderCategoryList(); document.getElementById('catModalOverlay').classList.add('active'); } }
+        function closeCategoryModal() { document.getElementById('catModalOverlay').classList.remove('active'); }
+        function closeCategoryModalOutside(e) { if(e.target.id === 'catModalOverlay') closeCategoryModal(); }
+
+        function renderCategoryList() {
+            const list = document.getElementById('categoryList');
+            list.innerHTML = '';
+            categories.forEach((cat, index) => {
+                list.innerHTML += `<div class="cat-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--bg-color); margin-bottom:5px; border-radius:5px;"><span>${cat}</span><button class="admin-btn delete-btn" onclick="deleteCategory(${index})"><i class="fas fa-trash"></i></button></div>`;
+            });
+        }
+
+        function addCategory() {
+            if(!isManagerLoggedIn) return;
+            const input = document.getElementById('newCatName');
+            const name = input.value.trim();
+            if (name) {
+                categories.push(name);
+                saveCategories();
+                input.value = '';
+                renderCategoryList();
+                populateCategoryDropdown();
+                renderMenu();
+                showToast("Category Added!", 'success');
+            }
+        }
+
+        function deleteCategory(index) {
+            if(!isManagerLoggedIn) return;
+            if(confirm(translations[currentLang].confirm_delete)) {
+                categories.splice(index, 1);
+                saveCategories();
+                renderCategoryList();
+                populateCategoryDropdown();
+                renderMenu();
+            }
+        }
+
+        function populateCategoryDropdown() {
+            const select = document.getElementById('itemCategory');
+            select.innerHTML = '';
+            categories.forEach(cat => { select.innerHTML += `<option value="${cat}">${cat}</option>`; });
+        }
+
+        function scrollToCategory(categoryName) {
+            const sectionId = 'section-' + categoryName.replace(/\s+/g, '-');
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document.querySelectorAll('.cat-pill').forEach(btn => {
+                    btn.classList.remove('active');
+                    if(btn.innerText === categoryName) btn.classList.add('active');
+                });
+            }
+        }
+
+        // --- ITEM FUNCTIONS ---
+        function openModal() {
+            if(!isManagerLoggedIn) return;
+            populateCategoryDropdown();
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalTitle').innerText = translations[currentLang].add_new;
+            document.getElementById('itemForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('itemImageHidden').value = '';
+            editingId = null;
+        }
+
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+        function closeModalOutside(e) { if(e.target.id === 'modalOverlay') closeModal(); }
+
+        function saveItem(e) {
+            if(!isManagerLoggedIn) return;
+            e.preventDefault();
+            const name = document.getElementById('itemName').value;
+            const category = document.getElementById('itemCategory').value;
+            let img = document.getElementById('itemImageHidden').value;
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            const desc = document.getElementById('itemDesc').value;
+
+            if (editingId && !img) {
+                const oldItem = menuItems.find(i => i.id === editingId);
+                if(oldItem) img = oldItem.img;
+            }
+
+            if (editingId) {
+                const index = menuItems.findIndex(i => i.id === editingId);
+                const currentStatus = menuItems[index].available;
+                menuItems[index] = { id: editingId, name, category, img, price, desc, available: currentStatus };
+                showToast("Item Updated!", 'success');
+            } else {
+                if(!img) img = 'https://via.placeholder.com/300x200?text=No+Image';
+                menuItems.push({ id: Date.now(), name, category, img, price, desc, available: true });
+                showToast("Item Added!", 'success');
+            }
+
+            saveData();
+            renderMenu();
+            closeModal();
+        }
+
+        function editItem(id) {
+            if(!isManagerLoggedIn) return;
+            populateCategoryDropdown();
+            const item = menuItems.find(i => i.id === id);
+            editingId = id;
+            
+            document.getElementById('modalTitle').innerText = translations[currentLang].edit;
+            document.getElementById('itemName').value = item.name;
+            document.getElementById('itemCategory').value = item.category;
+            document.getElementById('itemPrice').value = item.price;
+            document.getElementById('itemDesc').value = item.desc;
+            document.getElementById('itemImageHidden').value = item.img;
+            
+            if(item.img) {
+                document.getElementById('imagePreview').src = item.img;
+                document.getElementById('imagePreview').style.display = 'block';
+            }
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function deleteItem(id) {
+            if(!isManagerLoggedIn) return;
+            if(confirm(translations[currentLang].confirm_delete)) {
+                menuItems = menuItems.filter(i => i.id !== id);
+                saveData();
+                renderMenu();
+                showToast("Item Deleted", 'info');
+            }
+        }
+
+        function toggleAvailability(id) {
+            if(!isManagerLoggedIn) return;
+            const item = menuItems.find(i => i.id === id);
+            if(item) {
+                item.available = !item.available;
+                saveData();
+                renderMenu();
+                showToast(item.available ? "Item Available" : "Item Sold Out", 'info');
+            }
+        }
+
+        // --- RENDERING ---
+        function renderMenu() {
+            const navContainer = document.getElementById('categoryNav');
+            const menuContainer = document.getElementById('menuContainer');
+            
+            navContainer.innerHTML = '';
+            categories.forEach(cat => {
+                const pill = document.createElement('button');
+                pill.className = 'cat-pill';
+                pill.innerText = cat;
+                pill.onclick = () => scrollToCategory(cat);
+                navContainer.appendChild(pill);
+            });
+
+            menuContainer.innerHTML = '';
+            
+            categories.forEach(cat => {
+                const itemsInCat = menuItems.filter(item => item.category === cat);
+                if (itemsInCat.length === 0) return;
+
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                section.id = 'section-' + cat.replace(/\s+/g, '-');
+                
+                let gridHTML = '';
+                itemsInCat.forEach((item, index) => {
+                    const delay = index * 0.1;
+                    const isAvailable = item.available !== false;
+
+                    let adminControlsHTML = '';
+                    if (isManagerLoggedIn) {
+                        adminControlsHTML = `
+                            <div class="admin-controls">
+                                <button class="admin-btn stock-btn ${!isAvailable ? 'inactive' : ''}" onclick="toggleAvailability(${item.id})" title="Toggle Stock">
+                                    <i class="fas fa-${isAvailable ? 'check' : 'times'}"></i>
+                                </button>
+                                <button class="admin-btn edit-btn" onclick="editItem(${item.id})"><i class="fas fa-pen"></i></button>
+                                <button class="admin-btn delete-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        `;
+                    }
+                    
+                    gridHTML += `
+                        <div class="card ${isManagerLoggedIn ? 'show-admin' : ''} ${!isAvailable ? 'sold-out' : ''}" style="animation-delay: ${delay}s;">
+                            <div class="card-img-container">
+                                <img src="${item.img}" alt="${item.name}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                            </div>
+                            
+                            ${!isAvailable ? `<div class="sold-out-badge">${translations[currentLang].sold_out}</div>` : ''}
+
+                            ${adminControlsHTML}
+
+                            <div class="card-content">
+                                <h3 class="card-title">${item.name}</h3>
+                                <p class="card-desc">${item.desc}</p>
+                                <p class="card-price">${item.price.toLocaleString()} د.ع</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                section.innerHTML = `<h3 class="category-title" style="font-size: 1.5rem; color: var(--primary); font-family: 'Playfair Display', serif; margin-bottom: 15px; border-left: 4px solid var(--secondary); padding-left: 10px;">${cat}</h3><div class="menu-grid">${gridHTML}</div>`;
+                menuContainer.appendChild(section);
+            });
+        }
+
+        // --- IMAGE HANDLING ---
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const maxWidth = 600;
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > maxWidth) { height = height * (maxWidth / width); width = maxWidth; }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        const finalSrc = canvas.toDataURL('image/jpeg', 0.9);
+                        document.getElementById('itemImageHidden').value = finalSrc;
+                        document.getElementById('imagePreview').src = finalSrc;
+                        document.getElementById('imagePreview').style.display = 'block';
+                    };
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // --- QR CODE LOGIC ---
+        function generateQR() {
+            const currentUrl = window.location.href;
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentUrl)}`;
+            
+            const qrImg = document.getElementById('qrCodeImage');
+            qrImg.src = qrApiUrl;
+            
+            const downloadBtn = document.getElementById('downloadQrBtn');
+            if (isManagerLoggedIn) { downloadBtn.style.display = 'inline-flex'; } 
+            else { downloadBtn.style.display = 'none'; }
+
+            document.getElementById('qrModalOverlay').classList.add('active');
+        }
+        
+        function downloadQR() {
+            const imgSrc = document.getElementById('qrCodeImage').src;
+            fetch(imgSrc)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'menu-qrcode.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                });
+        }
+
+        function closeQRModal() { document.getElementById('qrModalOverlay').classList.remove('active'); }
+        function closeQRModalOutside(e) { if(e.target.id === 'qrModalOverlay') closeQRModal(); }
+
+        // --- SCROLL LOGIC ---
+        window.onscroll = () => {
+            if (document.documentElement.scrollTop > 300) {
+                document.getElementById('scrollTopBtn').style.display = 'flex';
+                document.getElementById('qrTriggerBtn').style.display = 'flex';
+                if(isManagerLoggedIn) document.getElementById('settingsBtnFloating').style.display = 'flex';
+            } else {
+                document.getElementById('scrollTopBtn').style.display = 'none';
+                document.getElementById('qrTriggerBtn').style.display = 'none';
+                if(document.documentElement.scrollTop <= 300) document.getElementById('settingsBtnFloating').style.display = 'none';
+            }
+        };
+        
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        // --- STORAGE ---
+        function saveData() { localStorage.setItem('confectioneryMenu', JSON.stringify(menuItems)); }
+        function saveCategories() { localStorage.setItem('confectioneryCategories', JSON.stringify(categories)); }
+
+        // Start App
+        init();
+    </script>
+</body>
+</html>
